@@ -44,7 +44,7 @@
     "clean": "rm -rf dist && mkdir dist",
     "build": "npm run clean && babel src -d ./dist",
     "start": "npm run build && node ./dist/app.js",
-    "db:refresh": "mongo blog_test --eval db.getCollectionNames().forEach(function(n){db[n].remove({})});",
+    "db:refresh": "mongo blog_test --eval 'db.getCollectionNames().forEach(function(n){db[n].remove({})});'",
     "testing": "cross-env NODE_ENV=test nyc mocha --timeout 20000 --exit",
     "test": "npm run db:refresh && npm run testing",
     "test-local": "npm run db:refresh && npm run testing",
