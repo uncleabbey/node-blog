@@ -1,0 +1,13 @@
+.env
+
+node_modules/
+
+.nyc_output/
+
+coverage/
+
+lcov.info
+
+yarn.lock
+
+dist/
