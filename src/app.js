@@ -73,6 +73,9 @@ const options = {
       {
         url: "http://localhost:3000/api/v1",
       },
+      {
+        url: "https://uncleabbey-blog.herokuapp.com/api/v1",
+      },
     ],
   },
   apis: ["src/routes/*.js"],
