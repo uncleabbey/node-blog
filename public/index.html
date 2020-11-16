@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Uncleabbey Blog</title>
+  <style>
+    body {
+      padding: 0;
+      margin: 0;
+    }
+    header {
+      background: #000;
+      text-align: center;
+      color: aliceblue;
+      padding: 2em;
+    }
+    section {
+      padding: 1em;
+      background: #cccccc;
+      text-align: center;
+      border: 1px solid #777;
+    }
+    ul{
+      list-style: none;
+    }
+    footer {
+      padding: 1em;
+      background: #000;
+      color: #fff;
+      text-align: center;   
+    }
+    footer > ul {
+      display: flex;
+      justify-content: center;
+    }
+    footer > ul > li {
+      margin-left: 2em;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Welcome to Uncleabbey Blog </h1>
+  </header>
+  <main>
+    <section>
+      <h3>Documentation</h3>
+      <p>Click <a href="/docs">here</a> to be redirected to the Documentation</p>
+    </section>
+    <section>
+      <h3>Technology Used</h3>
+      <ul>
+        <li>Node</li>
+        <li>Express</li>
+        <li>Babel</li>
+        <li>Mocha for test</li>
+        <li>Nyc for test</li>
+        <li>Mongodb</li>
+      </ul>
+    </section>
+    <section>
+      <h3>Running Locally</h3>
+    <p>To Run the api locally, Follow the following steps</p>
+    <ul>
+      <li>Clone or fork the repo and cd into the</li>
+      <li>type `npm install` or `yarn` to install packages.</li>
+      <li>
+        create .env file in the root folder. and the following
+      <p>
+        <code>SEC_KEY=string</code> <br>
+        <code>DEV_DB_URL=mongodb://localhost/blog-dev</code><br>
+        <code>NODE_ENV=development</code><br>
+      </p>
+      </li>
+      <li>After that run `npm run dev`</li>
+    </ul>
+    </section>
+  </main>
+  <footer>
+    <p>Made with ❤️️ by Uncleabbey</p>
+    <h3>Socials</h3>
+    <ul>
+      <li><a href="https://github.com/uncleabbey" target="_blank">Github</a></li>
+      <li><a href="https://twitter.com/_uncleabbey_" target="_blank">Twitter</a></li>
+      <li><a href="https://m.facebook.com/kayode.abiodun.7543653_" target="_blank">Facebook</a></li>
+      <li><a href="https://www.linkedin.com/in/kayode-gabriel-abiodun-a53627a9/" target="_blank">LinkedIn</a></li>
+    </ul>
+  </footer>
+</body>
+</html>

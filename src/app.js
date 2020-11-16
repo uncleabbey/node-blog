@@ -1,4 +1,5 @@
 /* eslint-disable no-console */
+import path from "path";
 import { json } from "body-parser";
 import { config } from "dotenv";
 import express from "express";
@@ -22,14 +23,10 @@ if (process.env.NODE_ENV === "development") {
 }
 const dbUrl = getDb(process.env.NODE_ENV);
 connectDatabase(dbUrl);
-app.get("/", (req, res) =>
-  res.status(200).send({
-    status: "success",
-    data: {
-      message: "Welcome to Teamwork API",
-    },
-  })
-);
+app.get("/", (req, res) => {
+  res.set("Content-Type", "text/html");
+  res.sendFile(path.join(__dirname, "../public/index.html"));
+});
 
 app.use("/api/v1", routes);
 
