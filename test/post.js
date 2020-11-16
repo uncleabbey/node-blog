@@ -1,9 +1,18 @@
 /* eslint-disable no-underscore-dangle */
-import { app, chai, expect, invalidToken } from "./helper/helper";
+import mongoose from "mongoose";
+import {
+  app,
+  chai,
+  expect,
+  invalidToken,
+  sinon,
+} from "./helper/helper";
+import Post from "../src/models/post";
 
 const registerUrl = "/api/v1/users/register";
 const postUrl = "/api/v1/posts";
 let validToken;
+let validToken2;
 let postId;
 let postId2;
 before(async () => {
@@ -11,6 +20,11 @@ before(async () => {
     email: "wizkid@example.com",
     password: "buhariole",
     name: "Wizkid Ayo Balogun",
+  };
+  const userData2 = {
+    email: "olamidebadoom@example.com",
+    password: "buhariole",
+    name: "Badoo Olamide Adedeji",
   };
   const postData = {
     title: "Drogba",
@@ -24,7 +38,12 @@ before(async () => {
     .request(app)
     .post(registerUrl)
     .send(userData);
+  const res2 = await chai
+    .request(app)
+    .post(registerUrl)
+    .send(userData2);
   validToken = res.body.data.token;
+  validToken2 = res2.body.data.token;
   const postResponse = await chai
     .request(app)
     .post(postUrl)
@@ -122,6 +141,30 @@ describe("Add Post route", () => {
         done();
       });
   });
+  it("internal server error for adding post to database", (done) => {
+    const stub = sinon
+      .stub(Post.prototype, "save")
+      .callsFake(() =>
+        Promise.reject(new Error("Internal server error"))
+      );
+    const data = {
+      title: "davidor@example.com",
+      body: "buhariole",
+    };
+    chai
+      .request(app)
+      .post(postUrl)
+      .set("Accept", "application/json")
+      .set("authorization", `Bearer ${validToken}`)
+      .send(data)
+      .end((err, res) => {
+        expect(res.status).to.equal(500);
+        const { status } = res.body;
+        expect(status).to.equal("error");
+        done(err);
+        stub.restore();
+      });
+  });
 });
 
 describe("Get post route", () => {
@@ -138,6 +181,24 @@ describe("Get post route", () => {
         done();
       });
   });
+  it("Internal server error for Get All post route", (done) => {
+    const stub = sinon
+      .stub(mongoose.Model, "find")
+      .callsFake(() =>
+        Promise.reject(new Error("Internal server error"))
+      );
+    chai
+      .request(app)
+      .get(postUrl)
+      .end((err, res) => {
+        expect(res).to.have.status(500);
+        const { status } = res.body;
+        expect(status).to.equal("error");
+        done();
+        stub.restore();
+      });
+  });
+
   it("Get one post", (done) => {
     chai
       .request(app)
@@ -161,6 +222,23 @@ describe("Get post route", () => {
         expect(status).to.equal("error");
         expect(error).to.be.a("string");
         done();
+      });
+  });
+  it("Internal server error for Get one post route", (done) => {
+    const stub = sinon
+      .stub(mongoose.Model, "findOne")
+      .callsFake(() =>
+        Promise.reject(new Error("Internal server error"))
+      );
+    chai
+      .request(app)
+      .get(`${postUrl}/${postId}`)
+      .end((err, res) => {
+        expect(res).to.have.status(500);
+        const { status } = res.body;
+        expect(status).to.equal("error");
+        done();
+        stub.restore();
       });
   });
 });
@@ -221,6 +299,63 @@ describe("Modify Posts", () => {
         const { status, error } = res.body;
         expect(status).to.equal("error");
         expect(error).to.be.a("string");
+        done();
+      });
+  });
+  it("should not modified post with valid inputs and invalid owner", (done) => {
+    const data = {
+      title: "Something Nice",
+      body: "Something About a Kingdom",
+    };
+    chai
+      .request(app)
+      .patch(`${postUrl}/${postId2}`)
+      .set("Accept", "application/json")
+      .set("authorization", `Bearer ${validToken2}`)
+      .send(data)
+      .end((err, res) => {
+        expect(res).to.have.status(401);
+        const { status, error } = res.body;
+        expect(status).to.equal("error");
+        expect(error).to.be.a("string");
+        done();
+      });
+  });
+  it("should not modified post with valid inputs and valid owner and invalid postid", (done) => {
+    const data = {
+      title: "Something Nice",
+      body: "Something About a Kingdom",
+    };
+    chai
+      .request(app)
+      .patch(`${postUrl}/5fa996a0ec9008047ccaa1bd`)
+      .set("Accept", "application/json")
+      .set("authorization", `Bearer ${validToken}`)
+      .send(data)
+      .end((err, res) => {
+        expect(res).to.have.status(404);
+        const { status, error } = res.body;
+        expect(status).to.equal("error");
+        expect(error).to.be.a("string");
+        done();
+      });
+  });
+  it("should not modified post and invalid postid", (done) => {
+    const data = {
+      title: "Something Nice",
+      body: "Something About a Kingdom",
+    };
+    chai
+      .request(app)
+      .patch(`${postUrl}/3eee3`)
+      .set("Accept", "application/json")
+      .set("authorization", `Bearer ${validToken}`)
+      .send(data)
+      .end((err, res) => {
+        expect(res).to.have.status(400);
+        const { status, error } = res.body;
+        expect(status).to.equal("error");
+        expect(error).to.be.an("object");
         done();
       });
   });
@@ -307,6 +442,24 @@ describe("Get Post by User endpoint", () => {
         expect(status).to.equal("error");
         expect(error).to.be.a("string");
         done();
+      });
+  });
+  it("Internal server error for Get All post by user route", (done) => {
+    const stub = sinon
+      .stub(mongoose.Model, "find")
+      .callsFake(() =>
+        Promise.reject(new Error("Internal server error"))
+      );
+    chai
+      .request(app)
+      .get(`${postUrl}/user`)
+      .set("authorization", `Bearer ${validToken}`)
+      .end((err, res) => {
+        expect(res).to.have.status(500);
+        const { status } = res.body;
+        expect(status).to.equal("error");
+        done();
+        stub.restore();
       });
   });
 });

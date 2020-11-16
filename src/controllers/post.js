@@ -14,7 +14,7 @@ export const getAllPosts = async (req, res, next) => {
     return successResponse(res, 200, message, posts);
   } catch (error) {
     return next({
-      status: 400,
+      status: 500,
       error,
     });
   }
@@ -28,12 +28,12 @@ export const addPost = async (req, res, next) => {
       body,
       author: _id,
     });
-    post.save();
+    await post.save();
     const message = "post added successfully";
     return successResponse(res, 201, message, post);
   } catch (error) {
     return next({
-      status: 400,
+      status: 500,
       error,
     });
   }
@@ -63,7 +63,7 @@ export const getPost = async (req, res, next) => {
     });
   } catch (error) {
     return next({
-      status: 400,
+      status: 500,
       error,
     });
   }
@@ -95,7 +95,7 @@ export const postByUsers = async (req, res, next) => {
     return successResponse(res, 200, message, posts);
   } catch (error) {
     return next({
-      status: 400,
+      status: 500,
       error,
     });
   }

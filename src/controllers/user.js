@@ -12,7 +12,7 @@ export const getUser = async (req, res, next) => {
     return successResponse(res, 200, message, user);
   }
   return next({
-    status: 400,
+    status: 404,
     error: "User does not exist",
   });
 };
@@ -44,7 +44,7 @@ export const loginUser = async (req, res, next) => {
     return successResponse(res, 201, message, data);
   } catch (error) {
     return next({
-      status: 400,
+      status: 500,
       error,
     });
   }
@@ -67,6 +67,6 @@ export const registerUser = async (req, res, next) => {
     };
     return successResponse(res, 201, message, data);
   } catch (error) {
-    return next({ status: 400, error });
+    return next({ status: 500, error });
   }
 };

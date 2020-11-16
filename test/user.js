@@ -1,10 +1,13 @@
-import { app, chai, expect, invalidToken } from "./helper/helper";
+import mongoose from "mongoose";
+import { sign } from "jsonwebtoken";
+import { app, chai, expect, sinon } from "./helper/helper";
+import User from "../src/models/user";
 
 const registerUrl = "/api/v1/users/register";
 const loginUrl = "/api/v1/users/login";
 const getUserUrl = "/api/v1/users/me";
 let validToken;
-
+let inToken;
 before(async () => {
   const data = {
     email: "davido@example.com",
@@ -13,6 +16,15 @@ before(async () => {
   };
   const res = await chai.request(app).post(registerUrl).send(data);
   validToken = res.body.data.token;
+  inToken = await sign(
+    {
+      // eslint-disable-next-line no-underscore-dangle
+      _id: "5fa996a0ec9008047ccaa1bd",
+      isAdmin: false,
+    },
+    process.env.SEC_KEY,
+    { expiresIn: "24h" }
+  );
 });
 describe("Register Routes", () => {
   it("Should register valid user input", (done) => {
@@ -76,7 +88,31 @@ describe("Register Routes", () => {
         const { status, error } = res.body;
         expect(status).to.equal("error");
         expect(error).to.equal("User already exist");
-        done();
+        done(err);
+      });
+  });
+  it("Should return internal server error when there is a problem craeting user", (done) => {
+    const stub = sinon
+      .stub(User.prototype, "save")
+      .callsFake(() =>
+        Promise.reject(new Error("Internal server error"))
+      );
+    const data = {
+      email: "davidor@example.com",
+      password: "buhariole",
+      name: "Davido",
+    };
+    chai
+      .request(app)
+      .post(registerUrl)
+      .set("Accept", "application/json")
+      .send(data)
+      .end((err, res) => {
+        expect(res.status).to.equal(500);
+        const { status } = res.body;
+        expect(status).to.equal("error");
+        done(err);
+        stub.restore();
       });
   });
 });
@@ -125,6 +161,24 @@ describe("Login User Routes", () => {
         done();
       });
   });
+  it("should return error for invalid email", (done) => {
+    const data = {
+      email: "david@example.com",
+      password: "buhariole",
+    };
+    chai
+      .request(app)
+      .post(loginUrl)
+      .set("Accept", "application/json")
+      .send(data)
+      .end((err, res) => {
+        expect(res).to.have.status(400);
+        const { status, error } = res.body;
+        expect(status).to.equal("error");
+        expect(error).to.equal("Invalid email or Password");
+        done();
+      });
+  });
   it("should error for invalid inputs", (done) => {
     const data = {
       email: "",
@@ -141,6 +195,29 @@ describe("Login User Routes", () => {
         expect(status).to.equal("error");
         expect(error).to.be.a("string");
         done();
+      });
+  });
+  it("Should return internal server error when there is a problem logging in user", (done) => {
+    const stub = sinon
+      .stub(mongoose.Model, "findOne")
+      .callsFake(() =>
+        Promise.reject(new Error("Internal server error"))
+      );
+    const data = {
+      email: "davidor@example.com",
+      password: "buhariole",
+    };
+    chai
+      .request(app)
+      .post(loginUrl)
+      .set("Accept", "application/json")
+      .send(data)
+      .end((err, res) => {
+        expect(res.status).to.equal(500);
+        const { status } = res.body;
+        expect(status).to.equal("error");
+        done(err);
+        stub.restore();
       });
   });
 });
@@ -179,12 +256,13 @@ describe("get Users", () => {
     chai
       .request(app)
       .get(getUserUrl)
-      .set("authorization", `Bearer ${invalidToken}`)
+      .set("authorization", `Bearer ${inToken}`)
       .end((err, res) => {
-        expect(res).to.have.status(400);
+        expect(res).to.have.status(404);
         const { status, error } = res.body;
         expect(status).to.equal("error");
         expect(error).to.be.a("string");
+        expect(error).to.be.equal("User does not exist");
         done();
       });
   });

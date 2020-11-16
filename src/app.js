@@ -2,13 +2,13 @@
 import { json } from "body-parser";
 import { config } from "dotenv";
 import express from "express";
-import { connect } from "mongoose";
 import swaggerJsdoc from "swagger-jsdoc";
 import morgan from "morgan";
 import swaggerUi from "swagger-ui-express";
 import routes from "./routes";
-import getDb from "./helpers/getDb";
 import errorResponse from "./helpers/errorResponse";
+import connectDatabase from "./db";
+import getDb from "./helpers/getDb";
 
 config();
 
@@ -16,21 +16,12 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 app.use(json());
+/* istanbul ignore if */
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("tiny"));
 }
-
 const dbUrl = getDb(process.env.NODE_ENV);
-console.log("dbUrl ", dbUrl);
-connect(dbUrl, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  useCreateIndex: true,
-})
-  .then(() => console.log("Connected to database"))
-  .catch((err) => console.log(err));
-
-console.log("environment: ", process.env.NODE_ENV);
+connectDatabase(dbUrl);
 app.get("/", (req, res) =>
   res.status(200).send({
     status: "success",

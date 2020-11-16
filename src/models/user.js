@@ -33,9 +33,6 @@ userSchema.methods.generateAuthKey = function () {
     {
       // eslint-disable-next-line no-underscore-dangle
       _id: this._id,
-      name: this.name,
-      email: this.email,
-      password: this.password,
       isAdmin: this.isAdmin,
     },
     process.env.SEC_KEY,

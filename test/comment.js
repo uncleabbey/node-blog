@@ -1,5 +1,12 @@
 /* eslint-disable no-underscore-dangle */
-import { app, chai, expect, invalidToken } from "./helper/helper";
+import {
+  app,
+  chai,
+  expect,
+  invalidToken,
+  sinon,
+} from "./helper/helper";
+import Comment from "../src/models/comment";
 
 const registerUrl = "/api/v1/users/register";
 const postUrl = "/api/v1/posts";
@@ -108,6 +115,29 @@ describe("Comment on Post", () => {
         done();
       });
   });
+  it("It should nreturn internal server error when wfrom issue at saving at database", (done) => {
+    const stub = sinon
+      .stub(Comment.prototype, "save")
+      .callsFake(() =>
+        Promise.reject(new Error("Internal server error"))
+      );
+    const comment = {
+      body: "opor yeah gan",
+    };
+    chai
+      .request(app)
+      .post(`${postUrl}/${postId}/comments`)
+      .set("Accept", "application/json")
+      .set("authorization", `Bearer ${validToken}`)
+      .send(comment)
+      .end((err, res) => {
+        expect(res.status).to.equal(500);
+        const { status } = res.body;
+        expect(status).to.equal("error");
+        done(err);
+        stub.restore();
+      });
+  });
 });
 
 describe("Delete comment", () => {
@@ -121,6 +151,34 @@ describe("Delete comment", () => {
         const { status, error } = res.body;
         expect(status).to.equal("error");
         expect(error).to.be.a("string");
+        done();
+      });
+  });
+  it("should not delete a comment with valid token with invalid commentId", (done) => {
+    chai
+      .request(app)
+      .delete(
+        `${postUrl}/${postId}/comments/5fa996a0ec9008047ccaa1bd`
+      )
+      .set("authorization", `Bearer ${validToken}`)
+      .end((err, res) => {
+        expect(res).to.have.status(404);
+        const { status, error } = res.body;
+        expect(status).to.equal("error");
+        expect(error).to.be.a("string");
+        done();
+      });
+  });
+  it("should not delete a comment with valid token with invalid commentId 2", (done) => {
+    chai
+      .request(app)
+      .delete(`${postUrl}/${postId}/comments/33ee`)
+      .set("authorization", `Bearer ${validToken}`)
+      .end((err, res) => {
+        expect(res).to.have.status(400);
+        const { status, error } = res.body;
+        expect(status).to.equal("error");
+        expect(error).to.be.an("object");
         done();
       });
   });

@@ -37,7 +37,9 @@
     "mocha-lcov-reporter": "^1.3.0",
     "nodemon": "^2.0.6",
     "nyc": "^15.1.0",
-    "prettier": "^2.1.2"
+    "prettier": "^2.1.2",
+    "sinon": "^9.2.1",
+    "sinon-chai": "^3.5.0"
   },
   "scripts": {
     "dev": "nodemon --exec babel-node src/app.js",
@@ -45,9 +47,10 @@
     "build": "npm run clean && babel src -d ./dist",
     "start": "npm run build && node ./dist/app.js",
     "db:refresh": "mongo blog_test --eval 'db.getCollectionNames().forEach(function(n){db[n].remove({})});'",
+    "db:refresh:local": "mongo blog_test --eval db.getCollectionNames().forEach(function(n){db[n].remove({})});",
     "testing": "cross-env NODE_ENV=test nyc mocha --timeout 20000 --exit",
     "test": "npm run db:refresh && npm run testing",
-    "test-local": "npm run db:refresh && npm run testing",
+    "test-local": "npm run db:refresh:local && npm run testing",
     "cover": "nyc report --reporter=text-lcov > lcov.info",
     "coveralls": "coveralls < lcov.info",
     "coverage": "npm run cover && npm run coveralls"

@@ -2,6 +2,7 @@ import dotenv from "dotenv";
 import getDb from "../src/helpers/getDb";
 import { expect, invalidToken } from "./helper/helper";
 import stripBearerToken from "../src/helpers/stripBearerToken";
+// import connectDatabase from "../src/db/index";
 
 dotenv.config();
 describe("Get Database Function", () => {
@@ -34,3 +35,12 @@ describe("StripBearerToken Function", () => {
     done();
   });
 });
+
+// describe("Connect Database function", () => {
+//   it("return error when connecting to database", (done) => {
+//     expect(() =>
+//       connectDatabase("mongodb://localhost/blog")
+//     ).to.Throw();
+//     done();
+//   });
+// });

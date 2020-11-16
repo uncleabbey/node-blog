@@ -17,7 +17,7 @@ export const addComment = async (req, res, next) => {
     return successResponse(res, 201, message, comment);
   } catch (error) {
     return next({
-      status: "error",
+      status: 500,
       error,
     });
   }
