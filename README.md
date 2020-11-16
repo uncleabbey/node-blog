@@ -1,5 +1,4 @@
-# Node-Blog [![Build Status](https://travis-ci.com/uncleabbey/node-blog.svg?branch=main)](https://travis-ci.com/uncleabbey/node-blog) [![Coverage Status](https://coveralls.io/repos/github/uncleabbey/node-blog/badge.svg?branch=main)](https://coveralls.io/github/uncleabbey/node-blog?branch=main)
-
+# Node-Blog [![Build Status](https://travis-ci.com/uncleabbey/node-blog.svg?branch=main)](https://travis-ci.com/uncleabbey/node-blog)  [![Coverage Status](https://coveralls.io/repos/github/uncleabbey/node-blog/badge.svg?branch=main)](https://coveralls.io/github/uncleabbey/node-blog?branch=main)
 ## Technology Used
 
 - Node

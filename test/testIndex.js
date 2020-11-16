@@ -7,8 +7,6 @@ describe("Index.js", () => {
       .get("/")
       .end((err, res) => {
         expect(res).to.have.status(200);
-        console.log(res.header);
-        // expect(res.header)
         done();
       });
   });
