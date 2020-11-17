@@ -290,6 +290,7 @@
       "get": {
         "tags": ["Post"],
         "summary": "get all posts by user",
+        "produces": ["application/json"],
         "responses": {
           "200": {
             "description": "successful operation",
@@ -311,7 +312,99 @@
           }
         ]
       }
+    },
+  "/posts/{id}/comments": {
+    "post": {
+      "tags": ["Comment"],
+      "summary": "add comment",
+      "description": "Add Comment to post",
+      "parameters": [
+        {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "The id of the post.",
+            "type": "string"
+          },
+          {
+              "name": "data",
+              "in": "body",
+              "required": "true",
+              "schema": {
+              "$ref": "#/definitions/Comment"
+            }
+          }
+      ],
+      "produces": ["application/json"],
+      "responses": {
+          "200": {
+            "description": "successful operation",
+            "type": "object",
+            "schema": {
+              "$ref": "#/definitions/Comment"
+            }
+          },
+          "400": {
+            "description": "bad request"
+          },
+          "401": {
+            "description": "unAuthourized"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
     }
+  },
+  "/posts/{id}/comments/{commentId}": {
+    "delete": {
+      "tags": ["Comment"],
+      "summary": "delete a comment",
+      "description": "delete a comment on a post",
+      "parameters": [
+        {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "The id of the post.",
+            "type": "string"
+          },
+          {
+              "name": "commentId",
+              "in": "path",
+              "required": "true",
+            "description": "The id of the comment.",
+            "type": "string"
+          }
+      ],
+      "produces": ["application/json"],
+      "responses": {
+          "200": {
+            "description": "successful operation",
+            "type": "object",
+            "schema": {
+              "$ref": "#/definitions/Comment"
+            }
+          },
+          "400": {
+            "description": "bad request"
+          },
+          "401": {
+            "description": "unAuthourized"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+    }
+  }
   },
   "definitions": {
     "User": {
@@ -398,6 +491,32 @@
       "example": {
         "title": "Welcome to Uncleabbey Blog API",
         "body": "Lorem ipsum dolor amigo omo tell odogwu say we like to party"
+      }
+    }, 
+    "Comment": {
+      "required": ["body"],
+      "properties": {
+        "_id": {
+          "type": "string",
+          "description": "The auto-generated id of the comment."
+        },
+        "body": {
+          "type": "string",
+          "description": "The body of the comment."
+        },
+        "user": {
+          "type": "object",
+          "$ref": "#/definitions/User"
+        },
+        "createdAt": {
+          "type": "string"
+        },
+        "modifieldAt": {
+          "type": "string"
+        }
+      },
+      "example": {
+        "body": "opor yeye"
       }
     } 
   }
