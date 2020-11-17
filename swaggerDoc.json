@@ -1,0 +1,181 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "Uncleabbey Blog API",
+    "description": "This is a simple CRUD API application made with Express and documented with Swagger",
+    "license": {
+      "name": "MIT",
+      "url": "https://spdx.org/licenses/MIT.html",
+      "contact": {
+        "name": "Uncleabbey",
+        "url": "http://uncleabbey.github.io/",
+        "email": "gabkay007@gmail.com"
+      }
+    }
+  },
+  "securityDefinitions": {
+    "bearerAuth": {
+      "type": "apiKey",
+      "name": "Authorization",
+      "in": "header"
+    } 
+  },
+  "host": ["localhost:3000"],
+  "basePath": "/api/v1",
+  "schemes": [
+        "http"
+    ],
+  "tags": [
+    {
+      "name": "User",
+      "description": "API for aunthentication and access"
+    },
+    {
+      "name": "Post",
+      "description": "API for post"
+    },
+    {
+      "name": "Comment",
+      "description": "API for comments on post"
+    }
+  ],
+  "consumes": [
+        "application/json"
+    ],
+    "produces": [
+        "application/json"
+    ],
+  "paths": {
+    "/users/register": {
+      "post": {
+        "tags": ["User"],
+        "summary": "registers users",
+        "description": "Registers the user and returns the token",
+        "parameters": [
+          {
+            "name": "data",
+            "in": "body",
+            "required": "true",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+        }
+      ],
+        "produces": ["application/json"],
+        "responses": {
+          "201": {
+            "description": "successful operation"
+          },
+          "400": {
+          "description": "bad request"
+          }
+        }
+      }
+    },
+    "/users/login": {
+      "post": {
+        "tags": ["User"],
+        "summary": "login users",
+        "description": "login the user and returns the token",
+        "parameters": [
+          {
+            "name": "data",
+            "in": "body",
+            "required": "true",
+            "schema": {
+              "$ref": "#/definitions/Login"
+            }
+        }
+      ],
+        "produces": ["application/json"],
+        "responses": {
+          "201": {
+            "description": "successful operation"
+          },
+          "400": {
+          "description": "error"
+          }
+        }
+      }
+    },
+    "/users/me": {
+      "get": {
+        "tags": ["User"],
+        "summary": "Get users",
+        "description": "Get a user details based on token supplied",
+        "produces": ["application/json"],
+        "responses": {
+          "201": {
+            "description": "successful operation"
+          },
+          "400": {
+          "description": "error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "User": {
+      "required": [
+        "name", "email", "password"
+      ],
+      "properties": {
+        "_id": {
+          "type": "string",
+          "description": "The auto-generated id of the user."
+        },
+        "name": {
+          "type": "string",
+          "description": "The name of your user."
+        },
+        "email": {
+          "type": "string",
+          "description": "The email of your user."
+        },
+        "password": {
+          "type": "string",
+          "description": "The password of your user."
+        }
+      },
+      "example": {
+        "name": "John Doe",
+        "email": "johnny@gmail.com",
+        "password": "johnnixace"
+      }
+    },
+    "Login": {
+      "required": [
+        "email", "password"
+      ],
+      "properties": {
+        "_id": {
+          "type": "string",
+          "description": "The auto-generated id of the user."
+        },
+        "name": {
+          "type": "string",
+          "description": "The name of your user."
+        },
+        "email": {
+          "type": "string",
+          "description": "The email of your user."
+        },
+        "password": {
+          "type": "string",
+          "description": "The password of your user."
+        }
+      },
+      "example": {
+        "email": "johnny@gmail.com",
+        "password": "johnnixace"
+      }
+    } 
+  }
+}
