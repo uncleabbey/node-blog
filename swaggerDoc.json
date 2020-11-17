@@ -119,7 +119,292 @@
           }
         ]
       }
+    },
+    "/posts": {
+      "get": {
+        "tags": ["Post"],
+        "summary":"Get Posts",
+        "description": "Get All Post in the database",
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "type": "array",
+            "schema": {
+              "$ref": "#/definitions/Post"
+            }
+          },
+          "400": {
+            "description": "bad request"
+          }
+        }
+      },
+      "post": {
+        "tags": ["Post"],
+        "summary":"Add Posts",
+        "description": "Add Post in the database",
+        "parameters": [
+          {
+              "name": "data",
+              "in": "body",
+              "required": "true",
+              "schema": {
+              "$ref": "#/definitions/Post"
+            }
+          }
+        ],
+        "produces": ["application/json"],
+        "responses": {
+          "201": {
+            "description": "successful operation",
+            "type": "object",
+            "schema": {
+              "$ref": "#/definitions/Post"
+            }
+          },
+          "400": {
+            "description": "bad request"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/posts/{id}": {
+      "get": {
+        "tags": ["Post"],
+        "summary":"Get Post",
+        "description": "Get Post  by their Id from the server",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "The id of the post.",
+            "type": "string"
+          }
+        ],
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "type": "array",
+            "schema": {
+              "$ref": "#/definitions/Post"
+            }
+          },
+          "400": {
+            "description": "bad request"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["Post"],
+        "summary":"Edit Post",
+        "description":"Edit Post  by their Id using token",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "The id of the post.",
+            "type": "string"
+          },
+          {
+              "name": "data",
+              "in": "body",
+              "required": "true",
+              "schema": {
+              "$ref": "#/definitions/Post"
+            }
+          }
+        ],
+      "produces": ["application/json"],
+      "responses": {
+          "200": {
+            "description": "successful operation",
+            "type": "object",
+            "schema": {
+              "$ref": "#/definitions/Post"
+            }
+          },
+          "400": {
+            "description": "bad request"
+          },
+          "401": {
+            "description": "unAuthourized"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": ["Post"],
+        "summary":"Delete Post",
+        "description":"Delete Post  by their Id using token",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "The id of the post.",
+            "type": "string"
+          }
+        ],
+      "produces": ["application/json"],
+      "responses": {
+          "200": {
+            "description": "successful operation",
+            "type": "object",
+            "schema": {
+              "$ref": "#/definitions/Post"
+            }
+          },
+          "400": {
+            "description": "bad request"
+          },
+          "401": {
+            "description": "unAuthourized"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/posts/user": {
+      "get": {
+        "tags": ["Post"],
+        "summary": "get all posts by user",
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "type": "object",
+            "schema": {
+              "$ref": "#/definitions/Post"
+            }
+          },
+          "400": {
+            "description": "bad request"
+          },
+          "401": {
+            "description": "unAuthourized"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+  "/posts/{id}/comments": {
+    "post": {
+      "tags": ["Comment"],
+      "summary": "add comment",
+      "description": "Add Comment to post",
+      "parameters": [
+        {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "The id of the post.",
+            "type": "string"
+          },
+          {
+              "name": "data",
+              "in": "body",
+              "required": "true",
+              "schema": {
+              "$ref": "#/definitions/Comment"
+            }
+          }
+      ],
+      "produces": ["application/json"],
+      "responses": {
+          "200": {
+            "description": "successful operation",
+            "type": "object",
+            "schema": {
+              "$ref": "#/definitions/Comment"
+            }
+          },
+          "400": {
+            "description": "bad request"
+          },
+          "401": {
+            "description": "unAuthourized"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
     }
+  },
+  "/posts/{id}/comments/{commentId}": {
+    "delete": {
+      "tags": ["Comment"],
+      "summary": "delete a comment",
+      "description": "delete a comment on a post",
+      "parameters": [
+        {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "The id of the post.",
+            "type": "string"
+          },
+          {
+              "name": "commentId",
+              "in": "path",
+              "required": "true",
+            "description": "The id of the comment.",
+            "type": "string"
+          }
+      ],
+      "produces": ["application/json"],
+      "responses": {
+          "200": {
+            "description": "successful operation",
+            "type": "object",
+            "schema": {
+              "$ref": "#/definitions/Comment"
+            }
+          },
+          "400": {
+            "description": "bad request"
+          },
+          "401": {
+            "description": "unAuthourized"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+    }
+  }
   },
   "definitions": {
     "User": {
@@ -175,6 +460,63 @@
       "example": {
         "email": "johnny@gmail.com",
         "password": "johnnixace"
+      }
+    },
+    "Post": {
+      "required": ["title", "body"],
+      "properties": {
+        "_id": {
+          "type": "string",
+          "description": "The auto-generated id of the post."
+        },
+        "title": {
+          "type": "string",
+          "description": "The title of the post."
+        },
+        "body": {
+          "type": "string",
+          "description": "The body of the post."
+        },
+        "author": {
+          "type": "object",
+          "$ref": "#/definitions/User"
+        },
+        "createdAt": {
+          "type": "string"
+        },
+        "modifieldAt": {
+          "type": "string"
+        }
+      },
+      "example": {
+        "title": "Welcome to Uncleabbey Blog API",
+        "body": "Lorem ipsum dolor amigo omo tell odogwu say we like to party"
+      }
+    }, 
+    "Comment": {
+      "required": ["body"],
+      "properties": {
+        "_id": {
+          "type": "string",
+          "description": "The auto-generated id of the comment."
+        },
+        "body": {
+          "type": "string",
+          "description": "The body of the comment."
+        },
+        "user": {
+          "type": "object",
+          "$ref": "#/definitions/User"
+        },
+        "createdAt": {
+          "type": "string"
+        },
+        "modifieldAt": {
+          "type": "string"
+        }
+      },
+      "example": {
+        "body": "opor yeye"
       }
     } 
   }
