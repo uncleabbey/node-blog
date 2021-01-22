@@ -14,8 +14,6 @@ import getDb from "./helpers/getDb";
 import swaggerDoc from "../swaggerDoc.json";
 import strategy from "./helpers/strategy";
 
-
-
 config();
 
 const app = express();
