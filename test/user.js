@@ -154,7 +154,7 @@ describe("Login User Routes", () => {
       .set("Accept", "application/json")
       .send(data)
       .end((err, res) => {
-        expect(res).to.have.status(400);
+        expect(res).to.have.status(401);
         const { status, error } = res.body;
         expect(status).to.equal("error");
         expect(error).to.equal("Invalid email or Password");
@@ -172,7 +172,7 @@ describe("Login User Routes", () => {
       .set("Accept", "application/json")
       .send(data)
       .end((err, res) => {
-        expect(res).to.have.status(400);
+        expect(res).to.have.status(401);
         const { status, error } = res.body;
         expect(status).to.equal("error");
         expect(error).to.equal("Invalid email or Password");
