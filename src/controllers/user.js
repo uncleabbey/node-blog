@@ -5,7 +5,7 @@ import successResponse from "../helpers/successResponse";
 
 export const getUser = async (req, res, next) => {
   // eslint-disable-next-line prettier/prettier
-  const {_id: id } = req.user;
+  const { _id: id } = req.user;
   const user = await User.findOne({ _id: id }).select("-password");
   if (user) {
     const message = "User retrieved successfully";
@@ -21,7 +21,7 @@ export const loginUser = async (req, res, next) => {
     const user = await User.findOne({ email: req.body.email });
     if (!user) {
       return next({
-        status: 400,
+        status: 401,
         error: "Invalid email or Password",
       });
     }
@@ -31,7 +31,7 @@ export const loginUser = async (req, res, next) => {
     );
     if (!validPassword) {
       return next({
-        status: 400,
+        status: 401,
         error: "Invalid email or Password",
       });
     }

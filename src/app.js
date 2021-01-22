@@ -6,6 +6,7 @@ import express from "express";
 // import swaggerJsdoc from "swagger-jsdoc";
 import morgan from "morgan";
 import swaggerUi from "swagger-ui-express";
+import cors from "cors";
 import routes from "./routes";
 import errorResponse from "./helpers/errorResponse";
 import connectDatabase from "./db";
@@ -15,7 +16,8 @@ import swaggerDoc from "../swaggerDoc.json";
 config();
 
 const app = express();
-const port = process.env.PORT || 3000;
+app.use(cors());
+const port = process.env.PORT || 5000;
 
 app.use(json());
 /* istanbul ignore if */
