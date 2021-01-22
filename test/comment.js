@@ -16,9 +16,9 @@ let postId;
 let commentId;
 before(async () => {
   const userData = {
-    email: "oluwaburna@example.com",
+    email: "gabkay007@gmail.com",
     password: "buhariole",
-    name: "Damini Ogulu",
+    name: "Kayode Abiodun",
   };
   const userData2 = {
     email: "olamide@example.com",
