@@ -11,3 +11,7 @@ lcov.info
 yarn.lock
 
 dist/
+
+fbLogin.js
+
+facebookStrategy.js

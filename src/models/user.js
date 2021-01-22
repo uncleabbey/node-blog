@@ -19,7 +19,6 @@ const userSchema = new Schema({
     type: String,
     minlength: 3,
     maxlength: 1024,
-    required: true,
   },
   isAdmin: {
     type: Boolean,
