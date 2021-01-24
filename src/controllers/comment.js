@@ -1,5 +1,6 @@
 import Comment from "../models/comment";
 import successResponse from "../helpers/successResponse";
+import Post from "../models/post";
 
 export const addComment = async (req, res, next) => {
   const { id: postId } = req.params;
@@ -13,6 +14,13 @@ export const addComment = async (req, res, next) => {
       body,
     });
     await comment.save();
+    await Post.findByIdAndUpdate(
+      postId,
+      // eslint-disable-next-line no-underscore-dangle
+      { $addToSet: { comments: comment._id } },
+      { useFindAndModify: false }
+    );
+
     const message = "comment created successfully";
     return successResponse(res, 201, message, comment);
   } catch (error) {

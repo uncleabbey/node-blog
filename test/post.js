@@ -174,10 +174,10 @@ describe("Get post route", () => {
       .get(postUrl)
       .end((err, res) => {
         expect(res).to.have.status(200);
-        const { status, message, data } = res.body;
+        const { status, message, data: {posts} } = res.body;
         expect(status).to.equal("success");
         expect(message).to.equal("all post retrieved successfully");
-        expect(data).to.be.an("array");
+        expect(posts).to.be.an("array");
         done();
       });
   });

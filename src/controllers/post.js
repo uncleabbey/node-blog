@@ -1,17 +1,32 @@
 import Post from "../models/post";
-import Comment from "../models/comment";
+// import Comment from "../models/comment";
 import successResponse from "../helpers/successResponse";
 
 export const getAllPosts = async (req, res, next) => {
+  const limit = Number(req.query.limit) || 5;
+  const page = (Number(req.query.page) || 1) - 1;
   try {
-    const posts = await Post.find()
+    return await Post.find()
+      .limit(limit)
+      .skip(limit * page)
       .sort({ modifiedAt: -1 })
       .populate({
         path: "author",
         select: ["-password", "-__v", "-isAdmin"],
+      })
+      .exec((err, postLists) => {
+        Post.countDocuments().exec((_err, count) => {
+          const message = "all post retrieved successfully";
+          // console.log(count)
+          const pages = count <= limit ? 1 : Math.ceil(count / limit);
+          return successResponse(res, 200, message, {
+            count,
+            page: page + 1,
+            pages,
+            posts: postLists,
+          });
+        });
       });
-    const message = "all post retrieved successfully";
-    return successResponse(res, 200, message, posts);
   } catch (error) {
     return next({
       status: 500,
@@ -43,19 +58,16 @@ export const getPost = async (req, res, next) => {
 
   try {
     const post = await Post.findOne({ _id: id }).populate({
-      path: "author",
+      path: "author comments",
+      populate: {
+        path: "user",
+        select: "-password",
+      },
       select: "-password",
     });
     if (post) {
-      // eslint-disable-next-line no-underscore-dangle
-      const comments = await Comment.find({ post: post._id })
-        .sort({ modifiedAt: -1 })
-        .populate({
-          path: "user",
-          select: ["-password", "-__v", "-isAdmin"],
-        });
       const message = "succesfully retrieved post";
-      return successResponse(res, 200, message, { post, comments });
+      return successResponse(res, 200, message, { post });
     }
     return next({
       status: 404,
@@ -100,4 +112,3 @@ export const postByUsers = async (req, res, next) => {
     });
   }
 };
-
