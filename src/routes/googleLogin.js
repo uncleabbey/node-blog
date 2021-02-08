@@ -1,24 +1,14 @@
 /* eslint-disable no-console */
 import { Router } from "express";
-import passport from "passport";
 import _ from "lodash";
 import User from "../models/user";
 
 import successResponse from "../helpers/successResponse";
 
 const router = new Router();
-router.get(
-  "/google",
-  passport.authenticate("google", { scope: ["profile", "email"] })
-);
 
-router.get(
-  "/google/callback",
-  passport.authenticate("google", { failureRedirect: "/login" }),
-  async (req, res, next) => {
-    console.log(req.user);
-    // eslint-disable-next-line no-underscore-dangle
-    const { name, email } = req.user._json;
+router.post("/google", async (req, res, next) => {
+    const {email, name} = req.body;
     try {
       let user = await User.findOne({ email });
       if (!user) {

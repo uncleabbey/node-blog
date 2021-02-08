@@ -22,7 +22,18 @@ export const addComment = async (req, res, next) => {
     );
 
     const message = "comment created successfully";
-    return successResponse(res, 201, message, comment);
+    const data = {
+      createdAt: comment.createdAt,
+      modifiedAt: comment.modifiedAt,
+      _id: comment._id,
+      body: comment.body,
+      user: {
+        _id: req.user.id,
+        name: req.user.name,
+        email: req.user.email
+      }
+    }
+    return successResponse(res, 201, message, data);
   } catch (error) {
     return next({
       status: 500,

@@ -9,7 +9,7 @@ export const getAllPosts = async (req, res, next) => {
     return await Post.find()
       .limit(limit)
       .skip(limit * page)
-      .sort({ modifiedAt: -1 })
+      .sort({ createdAt: -1 })
       .populate({
         path: "author",
         select: ["-password", "-__v", "-isAdmin"],
@@ -45,7 +45,20 @@ export const addPost = async (req, res, next) => {
     });
     await post.save();
     const message = "post added successfully";
-    return successResponse(res, 201, message, post);
+    const data = {
+      author: {
+        name: req.user.name,
+        _id,
+        email: req.user.email
+      },
+      comments: post.comments,
+      title: post.title,
+      createdAt: post.createdAt,
+      modifiedAt: post.modifiedAt,
+      _id: post._id,
+      body: post.body,
+    }
+    return successResponse(res, 201, message, data );
   } catch (error) {
     return next({
       status: 500,

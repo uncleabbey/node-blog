@@ -1,7 +1,8 @@
 import { verify } from "jsonwebtoken";
 import stripBearerToken from "../helpers/stripBearerToken";
+import User from "../models/user";
 
-export default (req, res, next) => {
+export default async (req, res, next) => {
   const token = req.header("Authorization");
   if (!token) {
     return next({
@@ -12,9 +13,18 @@ export default (req, res, next) => {
   try {
     const strippedToken = stripBearerToken(token);
     const decoded = verify(strippedToken, process.env.SEC_KEY);
-    req.user = decoded;
-    return next();
-  } catch (ex) {
+    console.log(decoded)
+    const user = await User.findById(decoded._id);
+    if (user) {
+      req.user = user;
+      return next();
+    }
+    return next({
+      status: 404,
+      error: "Sorry User not Found",
+    });
+  } catch (error) {
+    // console.log(error)
     return next({
       status: 400,
       error: "Invalid token....",
