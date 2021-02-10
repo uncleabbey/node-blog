@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 import Post from "../models/post";
 // import Comment from "../models/comment";
 import successResponse from "../helpers/successResponse";
@@ -49,7 +50,7 @@ export const addPost = async (req, res, next) => {
       author: {
         name: req.user.name,
         _id,
-        email: req.user.email
+        email: req.user.email,
       },
       comments: post.comments,
       title: post.title,
@@ -57,8 +58,8 @@ export const addPost = async (req, res, next) => {
       modifiedAt: post.modifiedAt,
       _id: post._id,
       body: post.body,
-    }
-    return successResponse(res, 201, message, data );
+    };
+    return successResponse(res, 201, message, data);
   } catch (error) {
     return next({
       status: 500,

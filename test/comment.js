@@ -215,6 +215,7 @@ describe("Delete comment", () => {
       .delete(`${postUrl}/${postId}/comments/${commentId}`)
       .set("authorization", `Bearer ${validToken}`)
       .end((err, res) => {
+        console.log(res.body);
         expect(res).to.have.status(200);
         const { status, message } = res.body;
         expect(status).to.equal("success");

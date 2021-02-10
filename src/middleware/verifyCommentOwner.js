@@ -6,7 +6,7 @@ export default async (req, res, next) => {
   try {
     const comment = await Comment.findById({ _id: commendtId });
     if (comment) {
-      if (String(comment.user) === userId) {
+      if (String(comment.user) === String(userId)) {
         req.comment = comment;
         return next();
       }

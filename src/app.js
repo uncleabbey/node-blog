@@ -16,9 +16,13 @@ import strategy from "./helpers/strategy";
 
 config();
 
+const corsOptions = {
+  origin: "*",
+  optionsSuccessStatus: 200,
+};
 const app = express();
 const port = process.env.PORT || 5000;
-app.use(cors());
+app.use(cors(corsOptions));
 
 app.use(json());
 
@@ -36,6 +40,10 @@ passport.deserializeUser((user, done) => {
   done(null, user);
 });
 strategy();
+app.use(function (req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  next();
+});
 app.get("/", (req, res) => {
   res.set("Content-Type", "text/html");
   res.sendFile(path.join(__dirname, "../public/index.html"));
