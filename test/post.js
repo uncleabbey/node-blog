@@ -52,7 +52,7 @@ before(async () => {
   const postResponse2 = await chai
     .request(app)
     .post(postUrl)
-    .set("authorization", `Bearer ${validToken}`)
+    .set("authorization", `Bearer ${validToken2}`)
     .send(postData2);
   postId = postResponse.body.data._id;
   postId2 = postResponse2.body.data._id;
@@ -174,7 +174,11 @@ describe("Get post route", () => {
       .get(postUrl)
       .end((err, res) => {
         expect(res).to.have.status(200);
-        const { status, message, data: {posts} } = res.body;
+        const {
+          status,
+          message,
+          data: { posts },
+        } = res.body;
         expect(status).to.equal("success");
         expect(message).to.equal("all post retrieved successfully");
         expect(posts).to.be.an("array");
@@ -253,7 +257,7 @@ describe("Modify Posts", () => {
       .request(app)
       .patch(`${postUrl}/${postId2}`)
       .set("Accept", "application/json")
-      .set("authorization", `Bearer ${validToken}`)
+      .set("authorization", `Bearer ${validToken2}`)
       .send(postData)
       .end((err, res) => {
         expect(res).to.have.status(202);
@@ -311,7 +315,7 @@ describe("Modify Posts", () => {
       .request(app)
       .patch(`${postUrl}/${postId2}`)
       .set("Accept", "application/json")
-      .set("authorization", `Bearer ${validToken2}`)
+      .set("authorization", `Bearer ${validToken}`)
       .send(data)
       .end((err, res) => {
         expect(res).to.have.status(401);
@@ -366,7 +370,7 @@ describe("Delete Article Endpoint", () => {
     chai
       .request(app)
       .delete(`${postUrl}/${postId2}`)
-      .set("authorization", `Bearer ${validToken}`)
+      .set("authorization", `Bearer ${validToken2}`)
       .end((err, res) => {
         expect(res).to.have.status(200);
         const { status, message } = res.body;

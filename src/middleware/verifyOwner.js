@@ -6,13 +6,13 @@ export default async (req, res, next) => {
   try {
     const post = await Post.findById({ _id: id });
     if (post) {
-      if (String(post.author) === userId) {
+      if (String(post.author) === String(userId)) {
         req.post = post;
         return next();
       }
       return next({
         status: 401,
-        error: "Sorry on the owner can edit",
+        error: "Sorry on the owner can perform operation",
       });
     }
     return next({

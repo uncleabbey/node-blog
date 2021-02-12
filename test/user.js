@@ -262,7 +262,7 @@ describe("get Users", () => {
         const { status, error } = res.body;
         expect(status).to.equal("error");
         expect(error).to.be.a("string");
-        expect(error).to.be.equal("User does not exist");
+        expect(error).to.be.equal("Sorry User not Found");
         done();
       });
   });

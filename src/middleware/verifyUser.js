@@ -13,7 +13,6 @@ export default async (req, res, next) => {
   try {
     const strippedToken = stripBearerToken(token);
     const decoded = verify(strippedToken, process.env.SEC_KEY);
-    console.log(decoded)
     const user = await User.findById(decoded._id);
     if (user) {
       req.user = user;
