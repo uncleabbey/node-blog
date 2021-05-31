@@ -21,7 +21,7 @@
       "in": "header"
     } 
   },
-  "host": ["localhost:5000"],
+  "host": ["uncleabbey-blog.herokuapp.com"],
   "basePath": "/api/v1",
   "schemes": [
         "https",
