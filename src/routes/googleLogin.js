@@ -16,6 +16,7 @@ router.post("/google", async (req, res, next) => {
         name,
         email,
       });
+      user.isVerified = true;
       await user.save();
       const token = user.generateAuthKey();
       const message = "user created successfully";
