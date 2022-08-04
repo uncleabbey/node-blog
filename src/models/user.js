@@ -24,6 +24,10 @@ const userSchema = new Schema({
     type: Boolean,
     default: false,
   },
+  isVerified: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 // eslint-disable-next-line func-names

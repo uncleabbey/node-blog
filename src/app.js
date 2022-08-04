@@ -5,24 +5,18 @@ import { config } from "dotenv";
 import express from "express";
 import cors from "cors";
 import morgan from "morgan";
-import passport from "passport";
 import swaggerUi from "swagger-ui-express";
 import routes from "./routes";
 import errorResponse from "./helpers/errorResponse";
 import connectDatabase from "./db";
 import getDb from "./helpers/getDb";
 import swaggerDoc from "../swaggerDoc.json";
-import strategy from "./helpers/strategy";
 
 config();
 
-const corsOptions = {
-  origin: "*",
-  optionsSuccessStatus: 200,
-};
 const app = express();
 const port = process.env.PORT || 5000;
-app.use(cors(corsOptions));
+app.use(cors());
 
 app.use(json());
 
@@ -32,15 +26,8 @@ if (process.env.NODE_ENV === "development") {
 }
 const dbUrl = getDb(process.env.NODE_ENV);
 connectDatabase(dbUrl);
-app.use(passport.initialize());
-passport.serializeUser((user, done) => {
-  done(null, user.id);
-});
-passport.deserializeUser((user, done) => {
-  done(null, user);
-});
-strategy();
-app.use(function (req, res, next) {
+
+app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
   next();
 });
