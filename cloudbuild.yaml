@@ -1,0 +1,48 @@
+steps:
+  # Build the container image
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      -  build
+      -  -t
+      -  gcr.io/${PROJECT_ID}/$_SERVICE_NAME
+      -  .
+    timeout: 2400s
+  # Push the container image to Google Container Registry
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      -  push
+      -  "gcr.io/${PROJECT_ID}/$_SERVICE_NAME"
+    timeout: 2400s
+  # Deploy image to Cloud run
+  - name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
+    entrypoint: gcloud
+    args:
+        - run
+        - deploy
+        - $_SERVICE_NAME
+        - --image
+        - "gcr.io/${PROJECT_ID}/$_SERVICE_NAME"
+        - --region
+        - $_REGION
+        - --platform
+        - managed
+        - --allow-unauthenticated
+        - --set-env-vars=SEC_KEY=$_SEC_KEY,PROD_DB_URL=$_PROD_DB_URL,NODE_ENV=$_NODE_ENV
+        - --port
+        - $_PORT
+        - --max-instances
+        - $_MAX_INSTANCES
+        - --min-instances
+        - "0"
+    timeout: 2400s
+
+timeout: 2400s
+
+substitutions:
+  _REGION: us-central1
+
+images:
+- 'gcr.io/$PROJECT_ID/$_SERVICE_NAME'
+
+options:
+  dynamicSubstitutions: true

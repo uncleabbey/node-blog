@@ -1,0 +1,17 @@
+SHELL := /bin/bash
+
+include .env
+
+deploy-production:
+	gcloud builds submit --substitutions=_SERVICE_NAME=node-blog-production,\
+	_PORT=${PORT},\
+	_SEC_KEY=${SEC_KEY},\
+	_PROD_DB_URL=${PROD_DB_URL},\
+	__NODE_ENV=${_NODE_ENV},\
+	_MAX_INSTANCES=10 \
+	--timeout=2400
+
+
+
+deploy-all:
+	make deploy-production
